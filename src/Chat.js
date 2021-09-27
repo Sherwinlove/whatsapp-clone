@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import "./Chat.css";
 import { Avatar, IconButton } from '@mui/material/';
-import DonutLargeIcon from '@material-ui/icons/DonutLarge';
-import ChatIcon from '@material-ui/icons/Chat';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
-import { AttachFile, InsertEmoticon, MicNone, MicNoneSharp, Search, SearchOutlined } from '@material-ui/icons';
-import SidebarChat from './SidebarChat';
+import { AttachFile, InsertEmoticon, MicNone, SearchOutlined } from '@material-ui/icons';
+// import SidebarChat from './SidebarChat';
 
 function Chat() {
     const [seed, setSeed] = useState("");
