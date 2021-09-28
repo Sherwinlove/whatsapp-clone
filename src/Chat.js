@@ -3,11 +3,12 @@ import "./Chat.css";
 import { Avatar, IconButton } from '@mui/material/';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import { AttachFile, InsertEmoticon, MicNone, SearchOutlined } from '@material-ui/icons';
-// import SidebarChat from './SidebarChat';
+import { useParams } from 'react-router-dom'
 
 function Chat() {
     const [seed, setSeed] = useState("");
     const [input, setInput] = useState("");
+    const { roomId } = useParams();
 
     useEffect(() => {
         setSeed(Math.floor(Math.random() * 5000))
