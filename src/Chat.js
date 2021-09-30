@@ -2,6 +2,10 @@ import React, { useState, useEffect } from "react";
 import "./Chat.css";
 import { Avatar, IconButton } from "@mui/material/";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
+import db from "./firebase";
+import { useParams } from "react-router-dom";
+import { useStateValue } from "./StateProvider";
+import firebase from "firebase";
 import {
   AttachFile,
   InsertEmoticon,
@@ -9,8 +13,6 @@ import {
   MicNone,
   SearchOutlined,
 } from "@material-ui/icons";
-import db from "./firebase";
-import { useParams } from "react-router-dom";
 
 function Chat() {
   const [seed, setSeed] = useState("");
@@ -18,6 +20,7 @@ function Chat() {
   const [roomName, setRoomName] = useState("");
   const [roomSeeds, setRoomSeeds] = useState([]);
   const [messages, setMessages] = useState([]);
+  const [{ user }, dispatch] = useStateValue();
   const { roomId } = useParams();
 
   useEffect(() => {
@@ -49,6 +52,12 @@ function Chat() {
   const sendMessage = (e) => {
     e.preventDefault();
     console.log("You typed...", input);
+    db.collection("rooms").doc(roomId).collection("messages").add({
+      message: input,
+      name: user.displayName,
+      timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+    });
+
     setInput("");
   };
 
@@ -60,7 +69,12 @@ function Chat() {
         />
         <div className="chat__headerInfo">
           <h3>{roomName}</h3>
-          <p>Last seen at...</p>
+          <p>
+            Last seen{" "}
+            {new Date(
+              messages[messages.length - 1]?.timestamp?.toDate()
+            ).toUTCString()}
+          </p>
         </div>
         <div className="chat__headerRight">
           <IconButton>
@@ -76,7 +90,11 @@ function Chat() {
       </div>
       <div className="chat__body">
         {messages.map((message) => (
-          <p className={`chat__message ${true && "chat__receiver"}`}>
+          <p
+            className={`chat__message ${
+              message.name === user.displayName && "chat__receiver"
+            }`}
+          >
             <span className="chat__name">{message.name}</span>
             {message.message}
             <span className="chat__timestamp">
